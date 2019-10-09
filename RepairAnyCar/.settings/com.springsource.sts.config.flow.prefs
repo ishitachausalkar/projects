@@ -1,0 +1,2 @@
+//com.springsource.sts.config.flow.coordinates\:http\://www.springframework.org/schema/webflow\:/RepairAnyCar/src/main/webapp/WEB-INF/spring/root-context.xml=<?xml version\="1.0" encoding\="UTF-8"?>\n<graph>\n<element clazz\="ViewStateModelElement" type\="view-state">\n<structure end\="341" endstart\="328" start\="303" startend\="326"/>\n<bounds height\="86" width\="90" x\="19" y\="17"/>\n</element>\n</graph>
+eclipse.preferences.version=1
