@@ -1,0 +1,496 @@
+<!--
+//  Copyright 2005-2011 Jason Aaron Osgood, Jean-Francois Poilpret
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>5</version>
+	</parent>
+
+	<groupId>net.java.dev.designgridlayout</groupId>
+	<artifactId>designgridlayout</artifactId>
+	<packaging>jar</packaging>
+	<version>1.9</version>
+
+	<name>DesignGridLayout</name>
+	<description>
+		DesignGridLayout is a Swing LayoutManager that helps developers build 
+		always good looking dialogs through a very easy-to-use API, without
+		any need for a graphical GUI designer.
+	</description>
+	<url>http://java.net/projects/designgridlayout/</url>
+	<inceptionYear>2005</inceptionYear>
+	
+	<organization>
+		<name>Project DesignGridLayout</name>
+		<url>http://designgridlayout.java.net/</url>
+	</organization>
+
+	<properties>
+		<javaVersion>1.6</javaVersion>
+		<genscreenshots>false</genscreenshots>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> 
+		<maven.build.timestamp.format>yyyy-MM-dd_HH-mm-ss</maven.build.timestamp.format>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>screenshots</id>
+			<properties>
+				<genscreenshots>true</genscreenshots>
+			</properties>
+		</profile>
+	</profiles>
+
+	<build>
+		<pluginManagement>
+			<!-- note: this "plugin management" affects only the "build"; for "reporting",
+				you must provide separate declarations; ideally, build and reporting plugins
+				do not overlap -->
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>2.1.1</version>
+				</plugin>
+
+				<plugin>
+					<!-- download source and javadoc from all dependencies and make them
+						available within eclipse. Requires explicit call to: mvn eclipse:eclipse -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>2.8</version>
+					<configuration>
+						<addVersionToProjectName>true</addVersionToProjectName>
+						<downloadSources>true</downloadSources>
+						<downloadJavadocs>true</downloadJavadocs>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.4.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>${javaVersion}</source>
+						<target>${javaVersion}</target>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.3.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.4.3</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.3.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+
+				<!-- DECLARED BY SONATYPE PARENT -->
+<!--				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.1.2</version>
+				</plugin>
+-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
+
+				<!-- DECLARED BY SONATYPE PARENT -->
+				<!-- 
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.0</version>
+					<configuration>
+						<releaseProfiles>release</releaseProfiles>
+						<resume>false</resume>
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<preparationGoals>clean verify install</preparationGoals>
+					</configuration>
+				</plugin>
+				-->
+				<!-- 
+					Set the right svn URL, including designgridlayout subdir,
+					otherwise, checkout root dir will have 2 dirs (www & designgridlayout)
+					and no pom.xml, hence release:perform will fail.
+				-->
+				<!--
+				<connectionUrl>https://designgridlayout.dev.java.net/svn/designgridlayout/trunk/designgridlayout</connectionUrl>
+				-->
+
+				<plugin>
+					<!-- Surefire default configuration -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.6</version>
+					<configuration>
+						<groups>utest,itest</groups>
+						<systemPropertyVariables>
+							<screenshots>${genscreenshots}</screenshots>
+							<awt.useSystemAAFontSettings>false</awt.useSystemAAFontSettings>
+						</systemPropertyVariables>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.codehaus.mojo.webstart</groupId>
+					<artifactId>webstart-maven-plugin</artifactId>
+					<version>1.0-beta-1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>wagon-maven-plugin</artifactId>
+					<version>1.0-beta-3</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.wagon</groupId>
+					<artifactId>wagon</artifactId>
+					<version>1.0-beta-6</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.7</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<excludes>
+					<!-- 
+						Don't include reference screenshots used by test cases
+						so that generated tests jars are kept small
+					-->
+					<exclude>screenshots/**</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Also generate a source jar to be installed into the repository -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Also generate a javadoc jar to be installed into the repository -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<quiet>true</quiet>
+					<verbose>false</verbose>
+					<links>
+						<link>http://download.oracle.com/javase/6/docs/api</link>
+						<show>public</show>
+					</links>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadoc</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+ 			</plugin>
+
+			<!-- The following ensures that plugin V2.6 is used (instead of 2.2) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<!-- 
+					Change the following once newer checkstyle versions get available 
+					on maven repo (latest = 5.2, repo = 5.0)
+				-->
+				<!--
+				<dependencies>
+					<dependency>
+						<groupId>checkstyle</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>5.0</version>
+					</dependency>
+				</dependencies>
+				-->
+			</plugin>
+		</plugins>
+	</build>
+	
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.2</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>summary</report>
+							<report>dependencies</report>
+							<report>project-team</report>
+							<report>license</report>
+							<report>issue-tracking</report>
+							<report>mailing-list</report>
+							<report>scm</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
+
+			<!-- Generate javadoc only for source, not for test -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<quiet>true</quiet>
+					<verbose>false</verbose>
+					<links>
+						<link>http://download.oracle.com/javase/6/docs/api</link>
+						<show>public</show>
+					</links>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>javadoc</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+ 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.6</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>report-only</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<configLocation>config/checkstyle/checkstyle_checks.xml</configLocation>
+					<headerLocation>config/checkstyle/java_header.txt</headerLocation>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>1.2</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<linkXref>true</linkXref>
+					<minimumTokens>50</minimumTokens>
+					<targetJdk>${javaVersion}</targetJdk>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>cpd</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<!-- 
+		NB: we use a less recent TestNG that still has special jdk5 support 
+		otherwise it won't get used by FEST, which still has a dependency on 
+		TestNG with jdk5 classifier.
+		When FEST depends on more recent TestNG (without jdk5 classifier), we
+		can set the latest TestNG version here.
+	-->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.testng</groupId>
+				<artifactId>testng</artifactId>
+				<version>5.11</version>
+				<classifier>jdk15</classifier>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.easytesting</groupId>
+			<artifactId>fest-swing-testng</artifactId>
+			<version>1.2.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly Open Source Software license</comments>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>josgood</id>
+			<name>Jason Aaron Osgood</name>
+			<email>josgood@dev.java.net</email>
+			<roles>
+				<role>project owner</role>
+				<role>developer</role>
+			</roles>
+			<timezone>-8</timezone>
+		</developer>
+		<developer>
+			<id>jfpoilpret</id>
+			<name>Jean-Francois Poilpret</name>
+			<email>jfpoilpret@yahoo.fr</email>
+			<url>http://jfpoilpret.blogspot.com</url>
+			<roles>
+				<role>project owner</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>opencage</id>
+			<name>Stefan Pfab</name>
+			<email>opencage@dev.java.net</email>
+			<roles>
+				<role>content developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
+	<issueManagement>
+		<system>JIRA</system>
+		<url>http://java.net/jira/browse/DESIGNGRIDLAYOUT</url>
+	</issueManagement>
+
+	<mailingLists>
+		<mailingList>
+			<name>DesignGridLayout announces list</name>
+			<archive>http://java.net/projects/designgridlayout/lists/announce/archive</archive>
+		</mailingList>
+		<mailingList>
+			<name>DesignGridLayout users list</name>
+			<archive>http://java.net/projects/designgridlayout/lists/users/archive</archive>
+		</mailingList>
+		<mailingList>
+			<name>DesignGridLayout developers list</name>
+			<archive>http://java.net/projects/designgridlayout/lists/dev/archive</archive>
+		</mailingList>
+		<mailingList>
+			<name>DesignGridLayout issues list</name>
+			<archive>http://java.net/projects/designgridlayout/lists/issues/archive</archive>
+		</mailingList>
+		<mailingList>
+			<name>DesignGridLayout Subversion commits list</name>
+			<archive>http://java.net/projects/designgridlayout/lists/commits/archive</archive>
+		</mailingList>
+	</mailingLists>
+
+	<scm>
+		<connection>scm:svn:https://svn.java.net/svn/designgridlayout~svn/tags/1.9</connection>
+		<developerConnection>scm:svn:https://svn.java.net/svn/designgridlayout~svn/tags/1.9</developerConnection>
+		<url>http://java.net/projects/designgridlayout/sources/svn/show/tags/1.9</url>
+	</scm>
+</project>
