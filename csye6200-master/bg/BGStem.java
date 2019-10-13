@@ -5,11 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * A source code implementing Assignment 2 (b) of CSYE 6200 Filename: Stem.java
- * NUID: 001470055
- * 
- * @author - Bhavya Haridas
- */
+  */
 
 public class BGStem {
 
